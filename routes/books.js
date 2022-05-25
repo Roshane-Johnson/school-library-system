@@ -1,14 +1,14 @@
 const express = require('express')
 const DB = require('../lib/db')
 const router = express.Router()
-const { auth } = require('../middlewares/auth')
+const { auth, adminAuth } = require('../middlewares/auth')
 
 router.get('/', auth, (req, res) => {
 	DB.query(
 		`SELECT 
 			bh.is_approved AS approved,
 			bh.is_returned AS returned,
-			bh.return_dt,
+			bh.return_dt AS return_date,
 			bks.id,
 			bks.bk_title AS title,
 			bks.bk_desc AS description,
@@ -63,6 +63,17 @@ router.post('/return/:id', auth, (req, res) => {
 			req.flash('success', 'book borrow requested')
 			res.redirect('/books')
 		})
+	})
+})
+
+router.get('/approve/:id', adminAuth, (req, res) => {
+	let book_hist_id = parseInt(req.params.id)
+
+	DB.query('UPDATE school_library.borrow_history SET is_approved = 1  WHERE id = ?;', book_hist_id, (err, results) => {
+		if (err) throw err
+
+		req.flash('success', 'book approved')
+		res.redirect('/books')
 	})
 })
 

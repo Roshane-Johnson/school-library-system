@@ -1,0 +1,33 @@
+<main class="w-4/5 mx-auto">
+	<div>
+		<h1 class="font-bold text-center text-3xl mb-6">Available Books</h1>
+	</div>
+	<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+		<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+			<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+				<tr>
+					<th scope="col" class="px-6 py-3">Title</th>
+					<th scope="col" class="px-6 py-3">Author</th>
+					<th scope="col" class="px-6 py-3">Quantity</th>
+					<th scope="col" class="px-6 py-3">Status</th>
+					<th scope="col" class="px-6 py-3">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% books.forEach(book => { %>
+
+				<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+					<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"><%= book.title %></th>
+					<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"><%= book.writer %></th>
+					<td class="px-6 py-4"><%= book.qty %></td>
+					<td class="px-6 py-4"><%= book.approved %></td>
+					<td class="px-6 py-4 flex justify-between">
+						<a href="/books/edit/<%= book.id %>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+						<a href="/books/approve/<%= book.id %>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</a>
+					</td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</div>
+</main>

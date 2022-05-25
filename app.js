@@ -37,7 +37,7 @@ app.use('/', require('./routes/index'))
 app.use('/books', require('./routes/books'))
 
 // API Routes
-// app.use('/', require('./routes/api/auth'))
+app.use('/admin', require('./routes/admin'))
 
 // Start express app
 app.listen(PORT, () => {

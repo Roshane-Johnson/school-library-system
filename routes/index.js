@@ -28,10 +28,11 @@ router.post('/login', (req, res) => {
 		password: req.body.password.trim(),
 	}
 
-	DB.query('SELECT * FROM users WHERE email = ? LIMIT 1;', email, (err, rows) => {
+	DB.query('SELECT * FROM users usr JOIN school_library.roles rls ON rls.id = usr.role_id WHERE usr.email = ? LIMIT 1;', email, (err, rows) => {
 		if (err) throw err
 		if (bcrypt.compareSync(password, rows[0].password) && rows.length > 0) {
 			req.session.uuid = rows[0].id
+			req.session.u_role = rows[0].role
 			req.flash('success', 'login successful')
 			res.redirect('/')
 		} else {

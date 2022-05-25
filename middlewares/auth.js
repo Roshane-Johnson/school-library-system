@@ -7,4 +7,12 @@ function auth(req, res, next) {
 	}
 }
 
-module.exports = { auth }
+function adminAuth(req, res, next) {
+	if (req.session.u_role == 'admin') {
+		next()
+	} else {
+		res.redirect('/login?return=/admin/books')
+	}
+}
+
+module.exports = { auth, adminAuth }
