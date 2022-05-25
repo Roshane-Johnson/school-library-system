@@ -1,0 +1,20 @@
+<main class="w-11/12 mx-auto">
+	<div>
+		<h1 class="font-bold text-center text-3xl mb-6">My Books</h1>
+	</div>
+	<div class="grid">
+		<div class="grid grid-cols-5 gap-3">
+			<% books.forEach(book => { %>
+			<div class="flex flex-col">
+				<div class="book bg-slate-200 flex justify-center items-center flex-col py-6 px-3 <%= book.approved ? "bg-green-200" : "bg-orange-200" %> rounded text-black"> <img class="mb-6" src="<%= book.cover ?? "https://via.placeholder.com/128x194" %>" alt="<%= book.title %>" />
+				<h3 class="book-title"><%= book.title %></h3>
+				<p>Status: <%= book.approved ? "Approved" : "Pending" %></p>
+			</div>
+			<form class="mt-3" action="/books/return/<%= book.id %>" method="POST">
+				<input type="hidden" name="" />
+				<button class="bg-blue-500 text-white rounded px-4 py-2" type="submit">Return</button>
+			</form>
+		</div>
+		<% }) %>
+	</div>
+</main>

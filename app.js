@@ -25,7 +25,7 @@ app.use(
 	session({
 		secret: process.env.APP_SESSION_SECRET || 'secret8080',
 		resave: false,
-		saveUninitialized: false,
+		saveUninitialized: true,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 24, // day in milliseconds
 		},
@@ -34,10 +34,10 @@ app.use(
 
 // View Routes
 app.use('/', require('./routes/index'))
-// app.use('/books', require('./routes/books'))
+app.use('/books', require('./routes/books'))
 
 // API Routes
-app.use('/auth', require('./routes/api/auth'))
+// app.use('/', require('./routes/api/auth'))
 
 // Start express app
 app.listen(PORT, () => {
