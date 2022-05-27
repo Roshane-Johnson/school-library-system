@@ -38,15 +38,27 @@ router.post('/request/:id', auth, (req, res) => {
 		return_dt: new Date(Date.now() + 1209600000).toISOString().slice(0, 19).replace('T', ' '),
 	}
 
-	DB.query('INSERT INTO school_library.borrow_history SET ?;', data, (err, results) => {
+	const pendingBook = `SELECT * FROM school_library.borrow_history WHERE user_id = ? AND book_id = ? AND is_approved = 0 AND is_returned = 0 LIMIT 1;`
+
+	DB.query(pendingBook, [data.user_id, data.book_id], (err, rows) => {
 		if (err) throw err
 
-		DB.query('UPDATE school_library.books SET quantity = (quantity -1) WHERE id = ?;', book_id, (err, rows) => {
-			if (err) throw err
-
-			req.flash('success', 'book borrow requested')
+		if (rows.length > 0) {
+			req.flash('error', 'you already borrowed this book')
 			res.redirect('/books')
-		})
+			console.log('book already requested')
+		} else {
+			DB.query('INSERT INTO school_library.borrow_history SET ?;', data, (err, results) => {
+				if (err) throw err
+
+				DB.query('UPDATE school_library.books SET quantity = (quantity -1) WHERE id = ?;', book_id, (err, rows) => {
+					if (err) throw err
+
+					req.flash('success', 'book borrow requested')
+					res.redirect('/books')
+				})
+			})
+		}
 	})
 })
 
@@ -60,7 +72,7 @@ router.post('/return/:id', auth, (req, res) => {
 		DB.query('UPDATE school_library.books SET quantity = (quantity +1) WHERE id = ?;', book_id, (err, results) => {
 			if (err) throw err
 
-			req.flash('success', 'book borrow requested')
+			req.flash('success', 'book returned')
 			res.redirect('/books')
 		})
 	})
@@ -73,7 +85,7 @@ router.get('/approve/:id', adminAuth, (req, res) => {
 		if (err) throw err
 
 		req.flash('success', 'book approved')
-		res.redirect('/books')
+		res.redirect('/admin/books')
 	})
 })
 
